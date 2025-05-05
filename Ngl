@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Envíame un mensaje anónimo</title>
+  <style>
+    body {
+      background: linear-gradient(45deg, #ff0080, #ff8c00);
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background-color: rgba(255, 255, 255, 0.15);
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 12px;
+      background-color: black;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #mensaje-container {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card" id="usuario-container">
+  <h2>Antes de continuar</h2>
+  <p>Introduce tu usuario de Instagram.<br><small>(Tu mensaje será 100% anónimo)</small></p>
+  <input type="text" id="usuario" placeholder="@davidmrtn._" value="davidmrtn._">
+  <button onclick="guardarUsuario()">Continuar</button>
+</div>
+
+<div class="card" id="mensaje-container">
+  <h2>@<span id="userDisplay">davidmrtn._</span></h2>
+  <p>Tu mensaje será totalmente anónimo</p>
+  <textarea id="mensaje" rows="4" placeholder="Escribe tu mensaje..."></textarea>
+  <button onclick="enviarMensaje()">Enviar mensaje</button>
+</div>
+
+<script>
+  // Detectar si ya se guardó el usuario
+  const userGuardado = localStorage.getItem("usuarioInstagram");
+
+  if (userGuardado) {
+    document.getElementById("usuario-container").style.display = "none";
+    document.getElementById("mensaje-container").style.display = "block";
+    document.getElementById("userDisplay").innerText = userGuardado;
+  }
+
+  function guardarUsuario() {
+    const usuario = document.getElementById("usuario").value.trim().replace("@", "");
+    if (!usuario) {
+      alert("Escribe tu nombre de usuario de Instagram.");
+      return;
+    }
+
+    localStorage.setItem("usuarioInstagram", usuario);
+    location.reload();
+  }
+
+  function enviarMensaje() {
+    const mensaje = document.getElementById("mensaje").value.trim();
+    const usuario = localStorage.getItem("usuarioInstagram") || "davidmrtn._";
+
+    if (!mensaje) {
+      alert("Escribe un mensaje.");
+      return;
+    }
+
+    const mensajes = JSON.parse(localStorage.getItem("mensajes")) || [];
+    mensajes.push({ usuario, mensaje });
+    localStorage.setItem("mensajes", JSON.stringify(mensajes));
+
+    alert("Mensaje enviado anónimamente.");
+    window.location.href = "https://www.instagram.com/davidmrtn._/";
+  }
+</script>
+
+</body>
+</html>
